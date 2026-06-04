@@ -1,83 +1,24 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { gsap } from "gsap";
-import { ArrowUpRight } from "lucide-react";
 
-interface NavLink {
-  label: string;
-  href: string;
-  ariaLabel: string;
-}
-
-interface NavCardItem {
-  label: string;
-  bgColor: string;
-  textColor: string;
-  links: NavLink[];
-}
-
-const navItems: NavCardItem[] = [
-  {
-    label: "Work",
-    bgColor: "#1B1722",
-    textColor: "#fff",
-    links: [
-      { label: "All Projects", href: "/work", ariaLabel: "View all projects" },
-      { label: "Highlight Reels", href: "/work?filter=highlight-reels", ariaLabel: "Highlight reels" },
-      { label: "Commercial", href: "/work?filter=commercial", ariaLabel: "Commercial work" },
-    ],
-  },
-  {
-    label: "About",
-    bgColor: "#2F293A",
-    textColor: "#fff",
-    links: [
-      { label: "About Henry", href: "/about", ariaLabel: "About Henry Gannoe" },
-      { label: "Services", href: "/services", ariaLabel: "View services" },
-      { label: "Testimonials", href: "/testimonials", ariaLabel: "Client testimonials" },
-    ],
-  },
-  {
-    label: "Connect",
-    bgColor: "#2F293A",
-    textColor: "#fff",
-    links: [
-      { label: "Contact", href: "/contact", ariaLabel: "Get in touch" },
-      { label: "Instagram", href: "https://www.instagram.com/gannoemedia/", ariaLabel: "Instagram" },
-      { label: "TikTok", href: "https://www.tiktok.com/@henrygannoe", ariaLabel: "TikTok" },
-    ],
-  },
-];
-
-const EASE = "power3.out";
-const NAV_HEIGHT = 60;
-const EXPANDED_HEIGHT = 280;
+const HG_LOGO =
+  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIYAAAB5CAYAAAD8vVldAAAL8klEQVR4AeydTageVxnH7yu2YhZ2YRYV6qIRXDSiWahQwSxasIIRkkW7qNIuGtCAFVqwoslCIUWaRQW70EW7SKFdxIVCKvhBuwm0iwi2aAK6SBcVomCEdtFKK9z+njfv3Dt37pmZ55nzOe97Ls9zz8yZZ87zcf5zvubj/chW/asRcESgAsMRlJq1tVWBsQEo2N7e/qzVTS9goPB1q8Iqny4C1M9heHuxWPzDqtULGCg8Iorhp62Kq3zcCFAnl9HwN/jTsJm8gLHS9gbpYxgiZG6yOLdSwAhQCcfhbYr8InyVi/efpGbyBgaKj7S0/h2j3m/t181EESDud8IS+980Kqmbw822NfUGxkrhiVUqyS0YKPSW7Gwa5/CXYMtY7xq6b4EbOtNsTEmDAANk/tah/A4MFrrOvzsdx2uWZwSI6xVYuo0vdIuiTp7s5ln2gwBDFGLIQlIH307eNXEAPsZ2Jc8IEEe52AQQd/UUdbInX50dDBgrjWMDnYs4JfTsSr4myggQtNvht2EBhFxsvWdykT7Xe1B5ICgwMEg7NXoEB3+ptHGjxYjTg7CA4TqB+AQ8Rt8fE9AcDwqMlcIbq3Qs+e6YwCYfBwzL1pUYvACriYvzGbXwgGBwYGDYwQF9ew7h/M7Uas+BDd0hHk/BSyIEU8Zj3mML9C4pODCWper/HdeLrqckKDgLLwkPn4AnExel99iiUR4FGBjYN0Np9O6kROT3srMJjK8yhZeVyZfZXhJ+n4ZDkNe6RdeAKMDoKhnZv2/k+CwPU+syi7iH9Al4CQQckUU/6T7vYTsocTF6rVt0jYkGDAy1tBpRZihUyOC0rhuMqfvouRt+FD4PN4tOMot4mTKfgoMDgTLbFKwLaQqNBoxGgTINPkOhgs6ie7kQxPb78GX4Wfg0fD98DL4PlqbdeU+BY1LZIv802xfgV2FZrHuXdIfQ8yr8C/ghuG/RiUNxiIsw2KCzsTA2MNr3UBqdzpQohwbHgZYiuYcgdxsfIU8Ac4H0IizjG2napVLZ3SXskYGx5Iv8Yxy5H74bluX9j5OWQldjGBIVGCDZdQ+lz4/Q3cm7fYqU+e8o5bKKEWNna+drVFRgrIy7tEpHE67SkGMCS8W6FuUs54/6NjeB6MAA0UcNQTGt8o2U66rsvlM+cBxw5TnEsmad6tXueSA6MIz2hRy9W4DhMvP/rsyS8rjofhXLnlTA+LnWAbqTUOCwdAUyOO2a+NFuxibtJwEGyH7cENRQK4G+wGjPagzmm0SlVZMB+r2cdQi20AMWYatsEmAYjQrVYljUuqafMVoMGYj/EMM+xcUidJB/J+BX4DfJVxPyv1YLTxBMCYyfTrDP5xS5Gn3Od3UvlvKkxZIxwFEqsSHZPsfOv7oF0YXK4lg3O9t+MmAQjJ9ovSRI57WyfXLoM12BjnKswJCFpofR29BtbJyCpZVwFL8vy9KFRr/IkgFjXxiGM0q4eizAeAYAHIafH3Zr8Kj6nRz0qC+yQY0DB1MD48UBW8o4tGuFZYwh3cbumWuwlRoYlmnrvkfiC463pXXZ5wZdp8XXP+8rIEJGUmDQBFqc8h5nGOLlWuV8z3C+RdZVrNyad+W78ny6K1d5zrykwFhZoG12LVfRqujJiWuV03ITziLrMlL9sBIXV5CHfV1GtPNyAOOVtgEFb//XYJurxTGcXp5oDmCU+MkEV8Va1kFcLU6M2t63/hFDiZSZHBg0hdp5/RaDslRvrO3r3rAzSSXgozwIJHWhYXXsNIUNySQHxpAxjmPyxJUjO3iW7xjB1eJojXxUK4hcsm44HDCwesbk2xW47rVow6F57bApa+2B8YfG00JSnyteXPCdrkoZo0z3Zv6W1mihPQK5WoyodwZ7fB3K9q3YycCistU05EDoY7mAoW4xGJyFfnrcFUPfMYarzFnnZQEGl8jYdzTaQZXH9tv7MbYnX/ErY/bNalb5s02yAMMYrRQP7vhWrC+wjCGJLz4HYMSPwtaWb8X6AiuFjyYdOYFh6U5MTk0Q9p2u+g5eHSbnzcoJjGRzckWIa4vRCVJOYLzUsSXnri8w1m5Wkw0YzExKW8uYDEx88X2+dLLuWCdmA0Ysh2q5YSIwC2CwyCWfHgjjcS1FFYFZAANP5GMl4MNGnJeNsPR1OBTJdzyS+jIXYCQNSiBlIQekvwtkk7qYNQSG2vc5CarvLYVyqgIjVCQjlsOsJ9nt9saNCowmEuFTr3dNwptjK7EC42a8fJfEb5ay938Fxt541L11iEBtMeLVYm0x4sV21iWHnK4mD0RtMeKF3PfG3I5lrJKlfF1zqbcFjOX+pv4LVomtAP67te27KV819i3DdP5cgPESc3kzmSIRWBhj5dtaJP1kUFlbjJ5g/bEnf1Oy5RvmSX2dS4th+a7GlACWPoPYnK6EAZXlm1OvTaltwzkxxhga9cU+4JOzxUjxvoimckQmFzDkc4+ivzjOCYxvFBeNxAYxLD2XWKVaXU5gJB9QqaMSRnDWpeQExqwDt+7GV2DcrOFcY4yb2hX/GayH/JGfUY1zAEaKt7xi3HYfDf5KQDvj+t5KPkmSBRig/3MG7+TH7Azik0Rzthjaj+I+PMmziSdlAQa2yk8zkKgoxYtJ2Ra4mJlo/btDFa1AQrmA8W2t/QROfuhFKz5VLmeLMdXmqOflAkZUp2rh/hEoERhtr1Jdydm6krazY9uMzY6NyYQ6nhwYOPdlg/FJPqiOPZafoEA8OGlnJqm+e7qVHBiE9EewihhfnFQJ+gvlnK6K9Wfkn4K/qpAJIpIDGOov7QfxUFdIqi7LaQ0XgPYjMp90FhAhMwcwfL6iGyEE8yqSrjjJm/9JgYFTnzFUw5MGWV/RrC2G0fgk44ykwCAA34FVRPOq7XdV5c1ASLv0n+KDuMkHnz+YQQXlMlH7Rrt5nDHFodQthtbGq1rBEuToIoV87+moP1aHsugD+GTAwBnLo3xJbxgFAtdxfGzTdXZOG8q2fBwl+q9EJQMGAboAq4jxReynwlV2eArJ8xNnAUeb3mbnAvxQt2x8tvyi0l3d80PvpwSG1vZin5zWOjAgJz9aIy3necDRpsvsmLoi5KN+Yz0JMHDiyECwuoc2bTYi/st7I8dlw8AvGGTNokmAgVV/gVVEk/qiSrAKSVcVLQqpgKF14A2tYJXbkl+ZfDBWHKIDg27kxwbjv2WQDSnqvIkWUkGksqJ1J9GBQUDUS9t0I1eQr1RABFIAQ+tmtkHnnAFJixyl1YgKDIz+nxYVVI66ZdGWiZzcf5Bxi7wjei86nISck1zCCMri23Okl+ISptZRxhlRgUHgPgZrKMoDv1TsAfgIfArWPvMwaC/lPA+fhI/Ch+A9xMnfhOXJ72R3bLkAZW0EteEoGjAw9i2tmUT2hFa2dDl8ka//PEB6K7wkbI7RGlLsDqlXlXfOGNmIBgz0at+DkKYe8fUl0HEGXhJeystWxfscBRi0FmrHiZZlVZS4zpvw9wos3RvJYoE3Qbo4Yr5NWcEoCjCw7vOwhrRPR2vKmqXMYrHYGRTjgPaZDETjUnBggFz1WgRB+Upc9+ZVOvH4OiytyCEsfwc2EbG/bjphQDg4MNClvSX8M2QrOSIAON6Eb4MFJJb3fIPdPwkKDBB72eFnN+s9cRi2LJV3y9iYfeJ0Dl6SxmllHYwWFRQYaJPbxyROurH0brE44DxaM0cjsIqftCI3BoSH6mDgtL2HggEDpPb1b39aOXRwr+q6NzUCxPMgLABxPulGXVybWnZzXhBgYIjMzbv922tiPPy1RllNw0aA2H4JFoB0Z3feLyUFAQbu/hVu6AMxFq4zjiYivunI+RJrWACy08VwsXqta3gDAwMutuw+jIG3tvbrZsIIEPumi1lqpW7OLjcm/PMGBjrlmw2XMEpoVu+DYPtaklQEjsm3vSyvL3DKLnkBA0T+R4yAj+4WWbdKiAB18ji8oI7aLbraNC9goLjONNShziNIHcljAGblXsAwa6snzCYCFRizqaq0hlZgpI33bLStNzBmUw3lGVqBUV6dFGFRBUYR1VCeERUY5dVJERZVYBRRDeUZUYFRXp0UYVEFRhHVUJ4RHwIAAP//FsMMYgAAAAZJREFUAwDewnQgkv970AAAAABJRU5ErkJggg==";
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
   const [visible, setVisible] = useState(true);
   const [atTop, setAtTop] = useState(true);
   const lastScrollY = useRef(0);
   const pathname = usePathname();
 
-  const navRef = useRef<HTMLElement>(null);
-  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
-  const tlRef = useRef<gsap.core.Timeline | null>(null);
-  const hoverIntentRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // Hide on scroll down, reveal on scroll up
   useEffect(() => {
     const handleScroll = () => {
       const currentY = window.scrollY;
       setAtTop(currentY < 50);
       if (currentY > lastScrollY.current && currentY > 100) {
         setVisible(false);
-        // Close menu when hiding navbar
-        if (isExpanded) closeMenu();
       } else {
         setVisible(true);
       }
@@ -86,238 +27,40 @@ export default function Navbar() {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [isExpanded]);
-
-  // Close menu on route change
-  useEffect(() => {
-    if (isExpanded) closeMenu();
-  }, [pathname]);
-
-  const calculateHeight = useCallback(() => {
-    const navEl = navRef.current;
-    if (!navEl) return EXPANDED_HEIGHT;
-
-    const isMobile = window.matchMedia("(max-width: 768px)").matches;
-    if (isMobile) {
-      const contentEl = navEl.querySelector(".card-nav-content") as HTMLElement | null;
-      if (contentEl) {
-        const saved = {
-          visibility: contentEl.style.visibility,
-          pointerEvents: contentEl.style.pointerEvents,
-          position: contentEl.style.position,
-          height: contentEl.style.height,
-        };
-
-        contentEl.style.visibility = "visible";
-        contentEl.style.pointerEvents = "auto";
-        contentEl.style.position = "static";
-        contentEl.style.height = "auto";
-        contentEl.offsetHeight; // force reflow
-
-        const h = NAV_HEIGHT + contentEl.scrollHeight + 16;
-
-        contentEl.style.visibility = saved.visibility;
-        contentEl.style.pointerEvents = saved.pointerEvents;
-        contentEl.style.position = saved.position;
-        contentEl.style.height = saved.height;
-
-        return h;
-      }
-    }
-    return EXPANDED_HEIGHT;
   }, []);
 
-  const createTimeline = useCallback(() => {
-    const navEl = navRef.current;
-    if (!navEl) return null;
-
-    const cards = cardsRef.current.filter(Boolean);
-    gsap.set(navEl, { height: NAV_HEIGHT, overflow: "hidden" });
-    gsap.set(cards, { y: 40, opacity: 0 });
-
-    const tl = gsap.timeline({ paused: true });
-    tl.to(navEl, { height: calculateHeight, duration: 0.35, ease: EASE });
-    tl.to(cards, { y: 0, opacity: 1, duration: 0.35, ease: EASE, stagger: 0.06 }, "-=0.1");
-
-    return tl;
-  }, [calculateHeight]);
-
-  useLayoutEffect(() => {
-    const tl = createTimeline();
-    tlRef.current = tl;
-    return () => {
-      tl?.kill();
-      tlRef.current = null;
-    };
-  }, [createTimeline]);
-
-  // Rebuild timeline on resize
-  useLayoutEffect(() => {
-    const handleResize = () => {
-      if (!tlRef.current) return;
-      if (isExpanded) {
-        gsap.set(navRef.current, { height: calculateHeight() });
-        tlRef.current.kill();
-        const newTl = createTimeline();
-        if (newTl) {
-          newTl.progress(1);
-          tlRef.current = newTl;
-        }
-      } else {
-        tlRef.current.kill();
-        const newTl = createTimeline();
-        if (newTl) tlRef.current = newTl;
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [isExpanded, calculateHeight, createTimeline]);
-
-  const openMenu = () => {
-    const tl = tlRef.current;
-    if (!tl || isExpanded) return;
-    setIsOpen(true);
-    setIsExpanded(true);
-    tl.play(0);
-  };
-
-  const closeMenu = () => {
-    const tl = tlRef.current;
-    if (!tl) return;
-    setIsOpen(false);
-    tl.eventCallback("onReverseComplete", () => setIsExpanded(false));
-    tl.reverse();
-  };
-
-  const toggleMenu = () => {
-    if (isExpanded) closeMenu();
-    else openMenu();
-  };
-
-  // Hover intent — open on hover with small delay, close on leave
-  const handleMouseEnter = () => {
-    if (hoverIntentRef.current) clearTimeout(hoverIntentRef.current);
-    hoverIntentRef.current = setTimeout(() => {
-      openMenu();
-    }, 100);
-  };
-
-  const handleMouseLeave = () => {
-    if (hoverIntentRef.current) clearTimeout(hoverIntentRef.current);
-    hoverIntentRef.current = setTimeout(() => {
-      closeMenu();
-    }, 300);
-  };
-
-  const setCardRef = (i: number) => (el: HTMLDivElement | null) => {
-    cardsRef.current[i] = el;
-  };
-
-  const isExternal = (href: string) => href.startsWith("http");
-
   return (
-    <div
-      className={`fixed top-0 left-0 right-0 z-50 flex justify-center pt-4 md:pt-6 px-4 transition-transform duration-300 ${
-        visible ? "translate-y-0" : "-translate-y-[calc(100%+2rem)]"
-      }`}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between transition-all duration-300 ${
+        visible ? "translate-y-0" : "-translate-y-full"
+      } ${atTop ? "" : "backdrop-blur-md bg-black/60"}`}
+      style={{ padding: "48px 80px 20px" }}
     >
-      <nav
-        ref={navRef}
-        className={`w-full max-w-[800px] rounded-xl border border-white/10 shadow-lg shadow-black/20 relative overflow-hidden will-change-[height] ${
-          isExpanded ? "card-nav-open" : ""
-        }`}
-        style={{
-          backgroundColor: atTop && !isExpanded ? "rgba(10, 10, 11, 0.6)" : "rgba(10, 10, 11, 0.95)",
-          backdropFilter: "blur(16px)",
-          WebkitBackdropFilter: "blur(16px)",
-          height: NAV_HEIGHT,
-        }}
-      >
-        {/* Top bar */}
-        <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-4 md:px-5 z-10" style={{ height: NAV_HEIGHT }}>
-          {/* Hamburger */}
-          <button
-            onClick={toggleMenu}
-            className="flex flex-col items-center justify-center gap-[6px] h-full cursor-pointer group"
-            aria-label={isExpanded ? "Close menu" : "Open menu"}
-          >
-            <span
-              className={`block w-[26px] h-[2px] bg-white/70 group-hover:bg-white transition-transform duration-250 origin-center ${
-                isOpen ? "translate-y-[4px] rotate-45" : ""
-              }`}
-            />
-            <span
-              className={`block w-[26px] h-[2px] bg-white/70 group-hover:bg-white transition-transform duration-250 origin-center ${
-                isOpen ? "-translate-y-[4px] -rotate-45" : ""
-              }`}
-            />
-          </button>
+      <Link href="/" className="flex items-center gap-3">
+        <span className="w-[38px] h-[38px] grid place-items-center border border-white/[0.18] rounded-[10px] bg-[linear-gradient(155deg,rgba(30,64,124,0.4),rgba(255,255,255,0.02))] shadow-[0_0_20px_rgba(30,64,124,0.4)]">
+          <img src={HG_LOGO} alt="HG" className="w-[64%] h-[64%] object-contain drop-shadow-[0_0_6px_rgba(91,141,239,0.4)]" />
+        </span>
+        <b className="text-[15px] font-bold tracking-[0.06em] text-white">GANNOE MEDIA</b>
+      </Link>
 
-          {/* Logo */}
+      <div className="flex gap-5 md:gap-7">
+        {[
+          { label: "Work", href: "/work" },
+          { label: "About", href: "/about" },
+          { label: "Contact", href: "/#contact" },
+        ].map((link) => (
           <Link
-            href="/"
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-white font-bold text-lg tracking-[0.15em] uppercase"
-            style={{ fontFamily: "var(--font-heading)" }}
+            key={link.label}
+            href={link.href}
+            className={`relative font-mono text-[12px] tracking-[0.14em] uppercase py-1 transition-colors hover:text-white group ${
+              pathname === link.href ? "text-white" : "text-[#9aa1b2]"
+            }`}
           >
-            GANNOE
+            {link.label}
+            <span className="absolute left-0 bottom-[-2px] w-0 h-[1.5px] bg-[#4f7fd8] shadow-[0_0_8px_#4f7fd8] transition-all duration-250 group-hover:w-full" />
           </Link>
-
-          {/* Spacer to keep logo centered */}
-          <div className="w-[26px]" />
-        </div>
-
-        {/* Card content */}
-        <div
-          className={`absolute left-0 right-0 p-2 flex gap-3 z-[1] ${
-            isExpanded ? "visible pointer-events-auto" : "invisible pointer-events-none"
-          } max-md:flex-col max-md:items-stretch`}
-          style={{ top: NAV_HEIGHT }}
-          aria-hidden={!isExpanded}
-        >
-          {navItems.map((item, idx) => (
-            <div
-              key={item.label}
-              ref={setCardRef(idx)}
-              className="flex-1 min-w-0 rounded-lg flex flex-col p-3 md:p-4 gap-2 max-md:min-h-[60px]"
-              style={{ backgroundColor: item.bgColor, color: item.textColor }}
-            >
-              <span className="font-normal text-lg md:text-xl tracking-tight opacity-60">
-                {item.label}
-              </span>
-              <div className="mt-auto flex flex-col gap-0.5">
-                {item.links.map((lnk) =>
-                  isExternal(lnk.href) ? (
-                    <a
-                      key={lnk.label}
-                      href={lnk.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={lnk.ariaLabel}
-                      className="text-sm md:text-[15px] inline-flex items-center gap-1.5 text-white/90 hover:text-white/60 transition-colors"
-                    >
-                      <ArrowUpRight size={14} className="shrink-0" />
-                      {lnk.label}
-                    </a>
-                  ) : (
-                    <Link
-                      key={lnk.label}
-                      href={lnk.href}
-                      aria-label={lnk.ariaLabel}
-                      className="text-sm md:text-[15px] inline-flex items-center gap-1.5 text-white/90 hover:text-white/60 transition-colors"
-                    >
-                      <ArrowUpRight size={14} className="shrink-0" />
-                      {lnk.label}
-                    </Link>
-                  )
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      </nav>
-    </div>
+        ))}
+      </div>
+    </nav>
   );
 }

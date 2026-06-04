@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { testimonials } from "@/lib/data";
+import BorderGlow from "@/components/BorderGlow";
 
 export default function TestimonialsPage() {
   return (
@@ -11,18 +12,20 @@ export default function TestimonialsPage() {
       <section className="pb-24 px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {testimonials.map((testimonial) => (
-            <div key={testimonial.id} className="p-8 bg-surface rounded-lg border border-white/5">
-              <p className="text-foreground text-base leading-relaxed mb-6">
-                &ldquo;{testimonial.quote}&rdquo;
-              </p>
-              <p className="text-foreground font-semibold text-sm">{testimonial.clientName}</p>
-              <p className="text-text-muted text-xs mt-1">{testimonial.service}</p>
-              {testimonial.projectId && (
-                <Link href="/work" className="text-accent text-xs uppercase tracking-wide mt-4 inline-block hover:text-accent-hover transition-colors">
-                  View Project
-                </Link>
-              )}
-            </div>
+            <BorderGlow key={testimonial.id}>
+              <div className="p-8">
+                <p className="text-foreground text-base leading-relaxed mb-6">
+                  &ldquo;{testimonial.quote}&rdquo;
+                </p>
+                <p className="text-foreground font-semibold text-sm">{testimonial.clientName}</p>
+                <p className="text-text-muted text-xs mt-1">{testimonial.service}</p>
+                {testimonial.projectId && (
+                  <Link href="/work" className="text-accent text-xs uppercase tracking-wide mt-4 inline-block hover:text-accent-hover transition-colors">
+                    View Project
+                  </Link>
+                )}
+              </div>
+            </BorderGlow>
           ))}
         </div>
       </section>

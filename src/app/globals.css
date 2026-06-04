@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -73,6 +73,63 @@ h1, h2, h3, h4, h5, h6 {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--accent);
+}
+
+/* ===== Ambient aurora glow — site-wide ===== */
+.aurora-ambient {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.aurora-ambient .ab1,
+.aurora-ambient .ab2,
+.aurora-ambient .ab3 {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+}
+
+.aurora-ambient .ab1 {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(30, 64, 124, 0.9), transparent 65%);
+  top: -200px;
+  left: -100px;
+  opacity: 0.14;
+  animation: aurora-drift1 22s ease-in-out infinite;
+}
+
+.aurora-ambient .ab2 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(47, 95, 176, 0.7), transparent 65%);
+  bottom: -150px;
+  right: -80px;
+  opacity: 0.12;
+  animation: aurora-drift2 26s ease-in-out infinite;
+}
+
+.aurora-ambient .ab3 {
+  width: 380px;
+  height: 380px;
+  background: radial-gradient(circle, rgba(91, 141, 239, 0.5), transparent 65%);
+  top: 45%;
+  right: 15%;
+  opacity: 0.08;
+  animation: aurora-drift1 18s ease-in-out infinite reverse;
+}
+
+@keyframes aurora-drift1 {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(80px, 60px); }
+}
+
+@keyframes aurora-drift2 {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-70px, -50px); }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import BorderGlow from "@/components/BorderGlow";
 
 export default function AboutPage() {
   return (
@@ -40,27 +41,31 @@ export default function AboutPage() {
 
       <section className="py-24 bg-surface">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="p-8 bg-background rounded-lg border border-white/5">
-            <p className="text-accent text-xs uppercase tracking-widest mb-2">Education</p>
-            <h3 className="text-2xl font-bold text-foreground mb-2">Penn State University</h3>
-            <p className="text-text-muted leading-relaxed">
-              Film Production Major — Junior Year. Cinematography, editing, and visual storytelling.
-            </p>
-          </div>
-          <div className="p-8 bg-background rounded-lg border border-white/5">
-            <p className="text-accent text-xs uppercase tracking-widest mb-2">Experience</p>
-            <h3 className="text-2xl font-bold text-foreground mb-2">ROAR+ / Playfly Sports</h3>
-            <p className="text-text-muted leading-relaxed">
-              Media Production Intern — video and photo content for sports marketing campaigns.
-            </p>
-          </div>
+          <BorderGlow backgroundColor="#000000">
+            <div className="p-8">
+              <p className="text-accent text-xs uppercase tracking-widest mb-2">Education</p>
+              <h3 className="text-2xl font-bold text-foreground mb-2">Penn State University</h3>
+              <p className="text-text-muted leading-relaxed">
+                Film Production Major — Junior Year. Cinematography, editing, and visual storytelling.
+              </p>
+            </div>
+          </BorderGlow>
+          <BorderGlow backgroundColor="#000000">
+            <div className="p-8">
+              <p className="text-accent text-xs uppercase tracking-widest mb-2">Experience</p>
+              <h3 className="text-2xl font-bold text-foreground mb-2">ROAR+ / Playfly Sports</h3>
+              <p className="text-text-muted leading-relaxed">
+                Media Production Intern — video and photo content for sports marketing campaigns.
+              </p>
+            </div>
+          </BorderGlow>
         </div>
       </section>
 
       <section className="py-24">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <h2 className="text-4xl font-bold text-foreground mb-6">Want to Work Together?</h2>
-          <Link href="/contact" className="px-10 py-4 bg-accent text-white text-sm font-medium uppercase tracking-widest hover:bg-accent-hover transition-colors">
+          <Link href="/#contact" className="px-10 py-4 bg-accent text-white text-sm font-medium uppercase tracking-widest hover:bg-accent-hover transition-colors">
             Get In Touch
           </Link>
         </div>

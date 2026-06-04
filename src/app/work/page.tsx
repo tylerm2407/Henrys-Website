@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Play } from "lucide-react";
 import VideoLightbox from "@/components/VideoLightbox";
+import BorderGlow from "@/components/BorderGlow";
 import { projects, categories } from "@/lib/data";
 import type { Project } from "@/lib/data";
 
@@ -51,35 +52,36 @@ export default function WorkPage() {
       <section className="pb-24 px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map((project) => (
-            <button
-              key={project.id}
-              onClick={() => openProject(project)}
-              className="group block relative w-full overflow-hidden rounded-lg text-left"
-            >
-              <div className="relative aspect-video overflow-hidden">
-                <Image
-                  src={project.thumbnail}
-                  alt={project.title}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+            <BorderGlow key={project.id} backgroundColor="#0a0a0b">
+              <button
+                onClick={() => openProject(project)}
+                className="group block relative w-full overflow-hidden rounded-lg text-left"
+              >
+                <div className="relative aspect-video overflow-hidden">
+                  <Image
+                    src={project.thumbnail}
+                    alt={project.title}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
 
-                {project.videoUrl && (
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <div className="w-14 h-14 rounded-full bg-accent/90 flex items-center justify-center">
-                      <Play size={24} className="text-white ml-0.5" />
+                  {project.videoUrl && (
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="w-14 h-14 rounded-full bg-accent/90 flex items-center justify-center">
+                        <Play size={24} className="text-white ml-0.5" />
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
-                <div className="absolute bottom-0 left-0 right-0 p-5">
-                  <p className="text-accent text-xs uppercase tracking-widest mb-1">{project.categoryLabel}</p>
-                  <h3 className="text-xl font-bold text-white">{project.title}</h3>
+                  <div className="absolute bottom-0 left-0 right-0 p-5">
+                    <p className="text-accent text-xs uppercase tracking-widest mb-1">{project.categoryLabel}</p>
+                    <h3 className="text-xl font-bold text-white">{project.title}</h3>
+                  </div>
                 </div>
-              </div>
-            </button>
+              </button>
+            </BorderGlow>
           ))}
         </div>
 
@@ -95,7 +97,7 @@ export default function WorkPage() {
           <p className="text-text-muted text-lg mb-10">
             Every project starts with a conversation.
           </p>
-          <Link href="/contact" className="px-10 py-4 bg-accent text-white text-sm font-medium uppercase tracking-widest hover:bg-accent-hover transition-colors">
+          <Link href="/#contact" className="px-10 py-4 bg-accent text-white text-sm font-medium uppercase tracking-widest hover:bg-accent-hover transition-colors">
             Get In Touch
           </Link>
         </div>

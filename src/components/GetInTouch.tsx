@@ -57,13 +57,6 @@ export default function GetInTouch() {
   return (
     <section id="contact" className="git-section">
       <div className="git-frame">
-        {/* Aurora background */}
-        <div className="git-aurora">
-          <span className="git-blob git-b1" />
-          <span className="git-blob git-b2" />
-          <span className="git-blob git-b3" />
-        </div>
-
         <div className="git-inner">
           {/* Logo */}
           <div className="git-mono">

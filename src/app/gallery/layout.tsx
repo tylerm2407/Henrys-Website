@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Work",
+  title: "Gallery",
 };
 
-export default function WorkLayout({
+export default function GalleryLayout({
   children,
 }: {
   children: React.ReactNode;

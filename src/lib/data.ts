@@ -153,7 +153,7 @@ export const testimonials: Testimonial[] = [
 
 export const navLinks = [
   { label: "Home", href: "/" },
-  { label: "Work", href: "/work" },
+  { label: "Gallery", href: "/gallery" },
   { label: "Services", href: "/services" },
   { label: "About", href: "/about" },
   { label: "Testimonials", href: "/testimonials" },

@@ -66,12 +66,6 @@ export default function RootLayout({
       className={`${barlowCondensed.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground relative">
-        {/* Site-wide ambient aurora glow */}
-        <div className="aurora-ambient" aria-hidden="true">
-          <span className="ab1" />
-          <span className="ab2" />
-          <span className="ab3" />
-        </div>
         <Navbar />
         <main className="flex-1 relative z-[1]">{children}</main>
         <Footer />

@@ -45,7 +45,7 @@ export default function Navbar() {
 
       <div className="flex gap-5 md:gap-7">
         {[
-          { label: "Work", href: "/work" },
+          { label: "Gallery", href: "/gallery" },
           { label: "About", href: "/about" },
           { label: "Contact", href: "/#contact" },
         ].map((link) => (

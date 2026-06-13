@@ -43,6 +43,15 @@
 
   @media (max-width: 1100px) { #g4-grid { grid-template-columns: repeat(3, 1fr); } }
   @media (max-width: 760px) { #g4-grid { grid-template-columns: repeat(2, 1fr); } .gal-body, .gal-head { padding-left: 16px; padding-right: 16px; } }
+  @media (max-width: 640px) {
+    .gal-head { padding-top: 100px; padding-bottom: 20px; flex-direction: column; align-items: flex-start; gap: 8px; }
+    .gal-head .meta { padding-bottom: 0; font-size: 10px; }
+    #g4-grid { grid-auto-rows: 130px; gap: 10px; }
+    .g4-card .meta b { font-size: 12px; }
+    .chip { font-size: 9px; padding: 7px 12px; }
+    #lb-foot { flex-direction: column; gap: 6px; padding: 14px 4px 0; }
+    #lb-title { font-size: 20px; }
+  }
 </style>
 </head>
 <body>
@@ -58,6 +67,14 @@
     <div class="right">
       <a class="swap" href="index.html">&larr; Back home</a>
       <a class="btn-solid magnetic" href="index.html#contact">Start a project</a>
+    </div>
+    <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+    <div class="mob-menu">
+      <a href="index.html">Home</a>
+      <a href="gallery.html" style="color:#fff;">Gallery</a>
+      <a href="index.html#services">Services</a>
+      <a href="index.html#contact">About</a>
+      <a class="btn-solid" href="index.html#contact">Start a project</a>
     </div>
   </nav>
 

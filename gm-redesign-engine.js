@@ -256,5 +256,27 @@ window.GM = (function () {
     });
   }
 
-  return { preload, camera, reveals, parallax, cursor, magnetic, timecode, form, recHud, N };
+  /* ---------- mobile hamburger menu ---------- */
+  function burger() {
+    const btn = document.querySelector('.burger');
+    const menu = document.querySelector('.mob-menu');
+    if (!btn || !menu) return;
+    btn.addEventListener('click', () => {
+      btn.classList.toggle('open');
+      menu.classList.toggle('open');
+      document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+    });
+    menu.querySelectorAll('a').forEach((a) => {
+      a.addEventListener('click', () => {
+        btn.classList.remove('open');
+        menu.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    });
+  }
+
+  /* auto-init burger on load */
+  burger();
+
+  return { preload, camera, reveals, parallax, cursor, magnetic, timecode, form, recHud, burger, N };
 })();

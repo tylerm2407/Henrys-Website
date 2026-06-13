@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Gannoe Media — Website
 
-## Getting Started
+Static site: no build step, no dependencies. `index.html` is the homepage
+(Penn State edition), `dark.html` is the dark edition, `gallery.html` is the gallery.
 
-First, run the development server:
+## Replacing the old Next.js site in this repo
+
+From a fresh clone of the repo:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/tylerm2407/Henrys-Website.git
+cd Henrys-Website
+
+# remove the old Next.js app (keeps .git)
+git rm -r --quiet src public package.json package-lock.json next.config.ts \
+  tsconfig.json postcss.config.mjs eslint.config.mjs AGENTS.md CLAUDE.md README.md
+
+# copy EVERYTHING inside this deploy folder into the repo root, then:
+git add -A
+git commit -m "Replace Next.js site with new static Gannoe Media site"
+git push
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Hosting note (Vercel)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+If the repo deploys via Vercel, open the Vercel project → Settings → Build & Development
+and set **Framework Preset** to **Other** (no build command, output directory = repo root).
+Vercel then serves the static files directly. GitHub Pages works the same way.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Known gaps
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Contact form** does not send email yet — it shows the thank-you state only.
+  (The old site used EmailJS; that can be wired into the form handler in
+  `gm-redesign-engine.js` → `GM.form`.)
+- **Gallery media is placeholder** (stock photos + sample videos) in
+  `gallery-data.js` — swap in real work when ready.

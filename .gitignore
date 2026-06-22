@@ -40,5 +40,11 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# videos (too large for GitHub)
-/public/videos/
+# videos — raw masters and oversized web clips stay local (too large for GitHub).
+# Small/medium web clips (<=50MB) ARE committed so they self-host on deploy.
+/public/videos/raw/
+/public/videos/web/footballvsIU.mp4
+/public/videos/web/sequence-01.mp4
+/public/videos/web/commercial/portniantic.mp4
+/public/videos/web/commercial/shellshockers.mp4
+/public/videos/web/commercial/thursday-live.mp4

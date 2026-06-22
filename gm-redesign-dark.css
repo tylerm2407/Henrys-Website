@@ -245,6 +245,7 @@ h1, h2, h3 { font-family: var(--hd); text-transform: uppercase; font-weight: 700
 #lb-card { width: min(1180px, 92vw); }
 #lb-media { border-radius: 16px; overflow: hidden; border: 1px solid rgba(79, 127, 216, 0.35); box-shadow: 0 30px 120px rgba(0, 0, 0, 0.8), 0 0 80px rgba(36, 74, 140, 0.35); background: #000; }
 #lb-media img, #lb-media video { display: block; width: 100%; max-height: 74vh; object-fit: contain; background: #000; }
+#lb-media iframe { display: block; width: 100%; aspect-ratio: 16 / 9; max-height: 74vh; border: 0; background: #000; }
 #lb-foot { display: flex; align-items: baseline; justify-content: space-between; gap: 18px; padding: 18px 4px 0; }
 #lb-title { margin: 0; font-size: 30px; }
 #lb-cat { font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(150, 185, 255, 0.8); }

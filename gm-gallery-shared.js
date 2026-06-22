@@ -7,7 +7,7 @@ window.GMGallery = (function () {
   const M = window.GM_MEDIA;
   const $ = (s, r) => (r || document).querySelector(s);
   const el = (h) => { const t = document.createElement('template'); t.innerHTML = h.trim(); return t.content.firstChild; };
-  const badge = (it) => it.type === 'video' ? '<span class="play">&#9654;</span>' : '';
+  const badge = (it) => (it.type === 'video' || it.type === 'embed') ? '<span class="play">&#9654;</span>' : '';
 
   function bindOpen(node, item) {
     node.addEventListener('click', () => window.gmOpenLightbox(item));
@@ -22,11 +22,14 @@ window.GMGallery = (function () {
     window.gmOpenLightbox = function (item) {
       lastFocus = document.activeElement;
       $('#lb-title').textContent = item.title;
-      $('#lb-cat').textContent = item.cat + (item.type === 'video' ? ' · Film' : ' · Still');
+      $('#lb-cat').textContent = item.cat + (item.type === 'image' ? ' · Still' : ' · Film');
       const slot = $('#lb-media');
       slot.innerHTML = '';
       if (item.type === 'video') {
         slot.appendChild(el(`<video src="${item.src}" controls autoplay playsinline poster="${item.thumb}"></video>`));
+      } else if (item.type === 'embed') {
+        const sep = item.src.indexOf('?') > -1 ? '&' : '?';
+        slot.appendChild(el(`<iframe src="${item.src}${sep}autoplay=1" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="${item.title}"></iframe>`));
       } else {
         slot.appendChild(el(`<img src="${item.src}" alt="${item.title}" />`));
       }

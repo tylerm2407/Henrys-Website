@@ -7,6 +7,9 @@ window.GM_MEDIA = [
   { id: 'v-baseballcine', type: 'video', cat: 'Highlights', title: 'Baseball — Cinematic',
     thumb: 'public/images/posters/baseballcine.jpg',
     src: 'public/videos/web/baseballcine.mp4' },
+  /* PENDING EMBED — too large to self-host. After uploading to YouTube/Vimeo,
+     set type:'embed' and src to the embed URL (e.g. https://www.youtube.com/embed/ID
+     or https://player.vimeo.com/video/ID). Local src works for preview only. */
   { id: 'v-footballvsiu', type: 'video', cat: 'Highlights', title: 'Football — Penn State vs Indiana',
     thumb: 'public/images/posters/footballvsIU.jpg',
     src: 'public/videos/web/footballvsIU.mp4' },
@@ -30,7 +33,7 @@ window.GM_MEDIA = [
     src: 'public/videos/web/baseballedit.mp4' },
   { id: 'v-sequence01', type: 'video', cat: 'Highlights', title: 'Showreel — Feature Cut',
     thumb: 'public/images/posters/sequence-01.jpg',
-    src: 'public/videos/web/sequence-01.mp4' },
+    src: 'public/videos/web/sequence-01.mp4' }, /* PENDING EMBED */
   { id: 'v-qbcinecolor', type: 'video', cat: 'Highlights', title: 'Quarterback — Color Grade',
     thumb: 'public/images/posters/qbcinecolor.jpg',
     src: 'public/videos/web/qbcinecolor.mp4' },
@@ -52,13 +55,13 @@ window.GM_MEDIA = [
   /* ---- commercial / business ---- */
   { id: 'v-portniantic', type: 'video', cat: 'Commercial', title: 'Port Niantic — Brand Film',
     thumb: 'public/images/posters/portniantic.jpg',
-    src: 'public/videos/web/commercial/portniantic.mp4' },
+    src: 'public/videos/web/commercial/portniantic.mp4' }, /* PENDING EMBED */
   { id: 'v-shellshockers', type: 'video', cat: 'Commercial', title: 'Shell Shockers — Business',
     thumb: 'public/images/posters/shellshockers.jpg',
-    src: 'public/videos/web/commercial/shellshockers.mp4' },
+    src: 'public/videos/web/commercial/shellshockers.mp4' }, /* PENDING EMBED */
   { id: 'v-thursdaylive', type: 'video', cat: 'Commercial', title: 'Thursday Live — Event',
     thumb: 'public/images/posters/thursday-live.jpg',
-    src: 'public/videos/web/commercial/thursday-live.mp4' },
+    src: 'public/videos/web/commercial/thursday-live.mp4' }, /* PENDING EMBED */
 
   /* ---- photography ---- */
   { id: 'p-01', type: 'image', cat: 'Photography', title: 'On Location — 01',

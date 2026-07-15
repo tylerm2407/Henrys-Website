@@ -1,0 +1,4 @@
+# Sanity Studio — dependencies and build output stay local
+node_modules/
+dist/
+.sanity/

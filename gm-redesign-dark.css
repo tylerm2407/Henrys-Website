@@ -180,7 +180,6 @@ h1, h2, h3 { font-family: var(--hd); text-transform: uppercase; font-weight: 700
 /* ---------- camera scroll ---------- */
 .cam { position: relative; height: 480vh; background: #000; }
 .cam-pin { position: sticky; top: 0; height: 100vh; overflow: hidden; }
-#camGhost { position: absolute; inset: -4%; width: 108%; height: 108%; filter: blur(46px) saturate(1.3); opacity: 0.55; }
 #camCanvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 .lbar { position: absolute; left: 0; right: 0; height: 9vh; background: #000; z-index: 20; }
 .lbar.top { top: 0; transform-origin: top; border-bottom: 1px solid rgba(91, 141, 232, 0.18); }

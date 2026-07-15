@@ -9,8 +9,12 @@ window.GM = (function () {
   gsap.registerPlugin(ScrollTrigger);
 
   /* ---------- frame sequence ---------- */
-  const N = 73;
-  const SRC = (n) => `public/images/camera-frames/frame-${String(n + 1).padStart(3, '0')}.jpg`;
+  const N = 100;
+  /* 4K set on large/hi-dpi displays; 1080 set on small screens (same look, saner memory) */
+  const FRAME_DIR = (Math.min(screen.width, screen.height) * Math.min(window.devicePixelRatio || 1, 2) > 1100)
+    ? 'public/images/camera-frames-4k'
+    : 'public/images/camera-frames-1080';
+  const SRC = (n) => `${FRAME_DIR}/frame-${String(n + 1).padStart(3, '0')}.webp`;
   const frames = new Array(N);
   const ready = new Array(N).fill(false);
 
@@ -71,22 +75,16 @@ window.GM = (function () {
     function paint(cv, c2, p, mult) {
       const cw = cv.width, ch = cv.height;
       c2.clearRect(0, 0, cw, ch);
-      const fi = p * (N - 1);
-      const i0 = nearest(Math.floor(fi));
-      if (i0 < 0) return;
-      const i1 = Math.min(Math.floor(fi) + 1, N - 1);
-      const t = fi - Math.floor(fi);
+      /* single nearest frame at full alpha — cross-fading two frames of a
+         moving subject reads as motion-blur ghosting at slow scroll speeds */
+      const i = nearest(Math.round(p * (N - 1)));
+      if (i < 0) return;
       const sc = (typeof opts.scale === 'function' ? opts.scale(p) : (opts.scale || 0.8)) * (mult || 1);
       const s = Math.min(cw, ch) * sc;
       const x = cw * (typeof opts.x === 'function' ? opts.x(p) : (opts.x ?? 0.5));
       const y = ch * (typeof opts.y === 'function' ? opts.y(p) : (opts.y ?? 0.5));
       c2.globalAlpha = 1;
-      c2.drawImage(frames[i0], x - s / 2, y - s / 2, s, s);
-      if (ready[i1] && i1 !== i0 && t > 0.02) {
-        c2.globalAlpha = t;
-        c2.drawImage(frames[i1], x - s / 2, y - s / 2, s, s);
-        c2.globalAlpha = 1;
-      }
+      c2.drawImage(frames[i], x - s / 2, y - s / 2, s, s);
     }
 
     function progressNow() {

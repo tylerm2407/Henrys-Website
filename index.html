@@ -90,7 +90,6 @@
   <!-- ============ CAMERA SEQUENCE — WHITE STUDIO ============ -->
   <section class="cam" id="camSection" data-screen-label="Camera Sequence">
     <div class="cam-pin">
-      <div class="cam-shadow"></div>
       <canvas id="camGhost"></canvas>
       <canvas id="camCanvas"></canvas>
       <div class="lbar top" id="lbTop"></div>
@@ -112,14 +111,14 @@
       </div>
 
       <span class="cam-readout" id="camReadout">ASSEMBLING THE RIG</span>
-      <span class="cam-frame-no" id="camFrameNo">FRAME 001 / 073</span>
+      <span class="cam-frame-no" id="camFrameNo">FRAME 001 / 100</span>
     </div>
   </section>
 
   <div class="rec-hud" id="recHud"><span class="led"></span>REC &middot; FILMING THE WORK</div>
 
-  <!-- ============ SELECTED WORK — EDITORIAL INDEX ============ -->
-  <section class="work" id="work" data-screen-label="Selected Work">
+  <!-- ============ SELECTED WORK — ORBIT RING ============ -->
+  <section class="work" id="work" data-screen-label="Selected Work — Orbit Ring">
     <div class="work-head">
       <div>
         <span class="kicker" data-reveal="0">Selected work</span>
@@ -127,36 +126,11 @@
       </div>
       <a class="all" href="gallery.html" data-reveal="0.15">View full gallery &rarr;</a>
     </div>
-
-    <article class="wrow" data-reveal="0">
-      <span class="no">01</span>
-      <div class="info">
-        <h3>Penn State &mdash; Season Reel</h3>
-        <p class="sub">Highlight Reels &middot; 2025</p>
-        <p class="desc">A full season of Penn State athletics, cut down to the moments that matter.</p>
-      </div>
-      <div class="thumb"><img src="public/images/posters/hero-reel.jpg" alt="Penn State season reel still" /><span class="badge">&#9655; WATCH</span></div>
-    </article>
-
-    <article class="wrow" data-reveal="0">
-      <span class="no">02</span>
-      <div class="info">
-        <h3>Lake of Isles &mdash; Brand Film</h3>
-        <p class="sub">Commercial &middot; 2025</p>
-        <p class="desc">Commercial work for Lake of Isles golf course — the course, the atmosphere, the light.</p>
-      </div>
-      <div class="thumb"><img src="public/images/posters/lake-of-isles.jpg" alt="Lake of Isles brand film still" /><span class="badge">&#9655; WATCH</span></div>
-    </article>
-
-    <article class="wrow" data-reveal="0">
-      <span class="no">03</span>
-      <div class="info">
-        <h3>Gannoe Media &mdash; Showreel</h3>
-        <p class="sub">Showreel &middot; 2026</p>
-        <p class="desc">The best of everything, in ninety seconds.</p>
-      </div>
-      <div class="thumb"><img src="public/images/posters/showreel.jpg" alt="Gannoe Media showreel still" /><span class="badge">&#9655; WATCH</span></div>
-    </article>
+    <div class="orbit-stage" id="orbitStage" data-reveal="0">
+      <div class="orbit-floor"></div>
+      <div class="orbit-scene"><div id="orbitRing"></div></div>
+      <span class="hint-pill">spins on its own &middot; drag to throw it faster or back &middot; click a card</span>
+    </div>
   </section>
 
   <!-- ============ SERVICES ============ -->
@@ -249,12 +223,27 @@
     </div>
   </footer>
 
+  <!-- shared lightbox viewer -->
+  <div id="lb" aria-modal="true" role="dialog">
+    <button id="lb-close" aria-label="Close">&#10005;</button>
+    <div id="lb-card">
+      <div id="lb-media"></div>
+      <div id="lb-foot"><h3 id="lb-title"></h3><span id="lb-cat"></span></div>
+    </div>
+  </div>
+
   <script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://unpkg.com/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="gallery-data.js"></script>
+  <script src="gm-cms-config.js"></script>
+  <script src="gm-cms.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mux/mux-player" defer></script>
+  <script src="gm-gallery-shared.js"></script>
   <script src="gm-redesign-engine.js"></script>
   <script>
     (function () {
-      GM.preload(function (i) { return 'public/images/camera-frames-clean/frame-' + String(i + 1).padStart(3, '0') + '.webp'; });
+      /* white-studio frame set (73 frames) mapped onto the engine's 100 slots */
+      GM.preload((i) => 'public/images/camera-frames-clean/frame-' + String(1 + Math.round(i * 72 / 99)).padStart(3, '0') + '.webp');
       GM.magnetic();
       GM.reveals();
       GM.parallax();
@@ -267,6 +256,10 @@
       })();
       GM.form('#gitForm', '#gitSent');
       GM.recHud('#recHud', '#work');
+      GM_loadMedia().then(() => {
+        GMGallery.lightbox();
+        GMGallery.orbitRing('#orbitStage', '#orbitRing');
+      });
 
       /* intro — marquee wordmark rises (skipped in background tabs) */
       if (!document.hidden) {
@@ -302,7 +295,7 @@
         ],
         onProgress(p) {
           const f = Math.round(p * (GM.N - 1)) + 1;
-          frameNo.textContent = 'FRAME ' + String(f).padStart(3, '0') + ' / 073';
+          frameNo.textContent = 'FRAME ' + String(f).padStart(3, '0') + ' / 100';
           let s = STATUS[0][1];
           for (const [at, txt] of STATUS) if (p >= at) s = txt;
           readout.innerHTML = s;

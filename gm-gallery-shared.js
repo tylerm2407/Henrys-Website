@@ -4,10 +4,9 @@
    Requires: gsap + gallery-data.js (window.GM_MEDIA) loaded first.
    ============================================================ */
 window.GMGallery = (function () {
-  const M = window.GM_MEDIA;
   const $ = (s, r) => (r || document).querySelector(s);
   const el = (h) => { const t = document.createElement('template'); t.innerHTML = h.trim(); return t.content.firstChild; };
-  const badge = (it) => (it.type === 'video' || it.type === 'embed') ? '<span class="play">&#9654;</span>' : '';
+  const badge = (it) => (it.type === 'video' || it.type === 'embed' || it.type === 'mux') ? '<span class="play">&#9654;</span>' : '';
 
   function bindOpen(node, item) {
     node.addEventListener('click', () => window.gmOpenLightbox(item));
@@ -30,6 +29,8 @@ window.GMGallery = (function () {
       } else if (item.type === 'embed') {
         const sep = item.src.indexOf('?') > -1 ? '&' : '?';
         slot.appendChild(el(`<iframe src="${item.src}${sep}autoplay=1" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="${item.title}"></iframe>`));
+      } else if (item.type === 'mux') {
+        slot.appendChild(el(`<mux-player playback-id="${item.src}" stream-type="on-demand" autoplay playsinline title="${item.title}" style="width:100%;height:100%;--controls-backdrop-color:rgba(0,0,0,.4)"></mux-player>`));
       } else {
         slot.appendChild(el(`<img src="${item.src}" alt="${item.title}" />`));
       }
@@ -55,6 +56,7 @@ window.GMGallery = (function () {
     const ring = $(ringSel);
     if (!stage || !ring) return;
     const N = 10, R = 700; // chord 2·R·sin(π/N) ≈ 432px > 340px card — no overlap
+    const M = window.GM_MEDIA || [];
     const items = M.slice(0, N);
     items.forEach((it, i) => {
       const c = el(
@@ -126,6 +128,7 @@ window.GMGallery = (function () {
     const grid = $(gridSel);
     if (!sec || !grid) return;
     const spans = [2, 1, 1, 2, 1, 2, 1, 1, 2, 1, 2, 1, 1, 2, 1, 2];
+    const M = window.GM_MEDIA || [];
     M.forEach((it, i) => {
       const c = el(
         `<div class="g4-card" tabindex="0" data-cat="${it.cat}" data-depth="${(i % 3) + 1}" style="grid-row:span ${spans[i % spans.length]}">

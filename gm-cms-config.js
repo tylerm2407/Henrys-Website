@@ -13,3 +13,13 @@ window.GM_CMS = {
   dataset: 'production',
   enabled: false,
 };
+
+/* Contact form delivery. Create a free form at https://formspree.io (point it
+   at the inbox that should receive leads) and paste its endpoint below, e.g.
+   'https://formspree.io/f/abcdwxyz'. Form IDs are public — safe to commit.
+   While empty, the Send button falls back to opening the visitor's email app
+   with the message pre-filled, so no lead is silently dropped. */
+window.GM_FORM = {
+  endpoint: '',
+  fallbackEmail: 'hello@gannoemedia.com',
+};

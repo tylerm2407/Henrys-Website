@@ -232,11 +232,49 @@ window.GM = (function () {
   function form(formSel, sentSel) {
     const f = document.querySelector(formSel);
     if (!f) return;
-    f.addEventListener('submit', (e) => {
-      e.preventDefault();
+    const cfg = window.GM_FORM || {};
+    const service = () => {
+      const chip = f.querySelector('.tchip.on');
+      return chip ? chip.textContent.trim() : '';
+    };
+    const showSent = () => {
       f.classList.add('hide');
       const s = document.querySelector(sentSel);
       if (s) s.classList.add('show');
+    };
+    /* no endpoint configured (or send failed) -> open the visitor's email app
+       pre-filled, so the lead still has a path out */
+    const mailtoFallback = (data) => {
+      const subject = 'Project inquiry — ' + (service() || 'Gannoe Media');
+      const body =
+        'Name: ' + (data.get('name') || '') + '\n' +
+        'Email: ' + (data.get('email') || '') + '\n' +
+        'Service: ' + service() + '\n\n' +
+        (data.get('project') || '');
+      location.href = 'mailto:' + (cfg.fallbackEmail || '') +
+        '?subject=' + encodeURIComponent(subject) +
+        '&body=' + encodeURIComponent(body);
+    };
+    f.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = new FormData(f);
+      data.append('service', service());
+      if (!cfg.endpoint) { mailtoFallback(data); return; }
+      const btn = f.querySelector('.send');
+      if (btn) btn.disabled = true;
+      try {
+        const r = await fetch(cfg.endpoint, {
+          method: 'POST',
+          body: data,
+          headers: { Accept: 'application/json' },
+        });
+        if (!r.ok) throw new Error('send failed: ' + r.status);
+        showSent();
+      } catch (err) {
+        mailtoFallback(data);
+      } finally {
+        if (btn) btn.disabled = false;
+      }
     });
     f.querySelectorAll('.tchip').forEach((c) => c.addEventListener('click', () => {
       f.querySelectorAll('.tchip').forEach((x) => x.classList.toggle('on', x === c));

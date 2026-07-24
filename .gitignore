@@ -49,3 +49,6 @@ next-env.d.ts
 /public/videos/web/commercial/portniantic.mp4
 /public/videos/web/commercial/shellshockers.mp4
 /public/videos/web/commercial/thursday-live.mp4
+
+.vercel
+.env*

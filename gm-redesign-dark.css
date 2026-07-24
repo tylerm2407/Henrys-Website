@@ -347,8 +347,10 @@ h1, h2, h3 { font-family: var(--hd); text-transform: uppercase; font-weight: 700
   .gnav .swap { display: none; }
   .gnav .btn-solid { font-size: 13px; padding: 9px 16px; }
 
-  /* hero */
-  .hero { padding-top: 110px; }
+  /* hero — shorter viewport share (kills the blank stretch) and a wordmark
+     size that shows most of the name as it scrolls past */
+  .hero { padding-top: 110px; min-height: 72svh; }
+  .hero-mark .mtrack { font-size: clamp(56px, 17vw, 70px); }
   .auraline { height: 180px; }
   .hero-rail { top: 68px; left: 16px; right: 16px; }
   .hr-logo { width: 36px; height: 36px; }
@@ -366,7 +368,12 @@ h1, h2, h3 { font-family: var(--hd); text-transform: uppercase; font-weight: 700
   .cam-tc { top: 10vh; right: 16px; font-size: 10px; }
   .cam-readout { bottom: 10vh; left: 16px; font-size: 10px; }
   .cam-frame-no { bottom: 10vh; right: 16px; font-size: 10px; }
-  .ph { left: 16px; right: 16px; max-width: none; }
+  /* pin the copy to the top and shift the rig render down so they never
+     overlap on portrait screens (transform, not resize — the canvas bitmap
+     is sized from its parent, resizing the box would squash the render) */
+  #camCanvas { transform: translateY(12vh); }
+  .ph { left: 16px; right: 16px; max-width: none; top: 12vh; transform: none; }
+  .ph.on { transform: none; }
   .ph h2 { font-size: clamp(38px, 10vw, 60px); }
   .ph p { font-size: 11px; }
   .ph .rec-badge { font-size: 10px; padding: 8px 14px; }
@@ -379,7 +386,7 @@ h1, h2, h3 { font-family: var(--hd); text-transform: uppercase; font-weight: 700
   .orbit-stage { height: 50vh; min-height: 320px; }
   #orbitRing { width: 260px; height: 162px; }
   .g5-card .meta b { font-size: 13px; }
-  .hint-pill { font-size: 9px; padding: 7px 14px; }
+  .hint-pill { font-size: 9px; padding: 7px 14px; white-space: normal; text-align: center; width: max-content; max-width: calc(100% - 32px); line-height: 1.7; }
 
   /* services */
   .services { padding: 10vh 16px; }
